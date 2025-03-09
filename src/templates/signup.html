@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block title %} Signup {% endblock%}
+
+{% block nav %}
+    <span class="navbar-brand mb-0 h1">Sign up</span>
+    <a class="nav-link text-white" href="{{ url_for('loginPage') }}">Log in</a>
+{% endblock %}
+
+{% block main %} 
+    <div class="form-container">
+        <h2>MY LITTLE PONIES</h2>
+        <h3 class="text-muted">PET SPA</h3>
+        <form method="POST" action="{{ url_for('signupPage') }}">
+            {% with message = get_flashed_messages() %}
+                {% if message %}
+                    <div class="alert alert-warning" role="alert">
+                        {{ message[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="mt-3 mb-3">
+                <input type="text" class="form-control" name="name" id="name" placeholder="Display name" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="confirmation" id="confirmation" placeholder="Re-enter password" required>
+            </div>
+            <button type="submit" class="btn btn-custom">Sign up</button>
+        </form>
+        <p class="mt-3">If you already have an account, <a href="{{  url_for('loginPage') }}" class="form-footer-link">Log in</a> here.</p>
+    </div>
+{% endblock%}
+</html>

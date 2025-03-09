@@ -1,0 +1,205 @@
+body {
+    background-color:#FFF5E4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.navbar {
+    background-color: #443627;
+    padding: 10px;
+    text-align: right;
+    color: #efefef;
+    font-weight: bold;
+    width: 100%;
+}
+.form-container {
+    max-width: 90%;
+    width: 400px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 15vh;
+}
+
+.form-control {
+    background-color: #f1dfdc;
+}
+.btn-custom {
+    background-color: #4a3828;
+    color: white;
+    width: 100%;
+}
+.form-footer-link {
+    color: black;
+}
+
+.navbar .nav-link.active {
+    background-color: #d87c30;
+    border-radius: 5px;
+}
+/* --------- Customer Main Page --------- */
+/* NavBar */
+.hero {
+    width: 100%;
+}
+
+.hero-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+.dropdown-menu {
+    background-color: #fef4e8;
+    border-radius: 8px;
+    min-width: 150px;
+}
+
+.dropdown-item:hover {
+    background-color: #D27C2C;
+    color: #000;
+}
+
+/* Button Styles */
+.service-btn{
+    background-color: #D27C2C; 
+    color: white;
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+    transition: background 0.3s ease;
+}
+
+.service-btn:hover {
+    background-color: #b46821; 
+}
+
+/* Services Section */
+.services {
+    position: relative;
+    padding: 0;
+    width: 100%;
+}
+.services-content img {
+    width: 100%;
+    height: 350px; /* Adjust as needed */
+    object-fit: cover;
+    display: block;
+}
+
+.services-buttons {
+    text-align: center;
+    padding: 20px 0;
+}
+
+
+/* Staff Section */
+
+.staff {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 40px 0;
+}
+
+.staff-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* ---------- Customer Services page ---------- */
+.services_page_hero{
+    width: 100%;
+    margin: 0;
+    padding: 24px 0;
+    background-color: #ffffff;
+}
+
+.service-card {
+    background-color: #8B4F27;
+    color: white;
+    padding: 42px;
+    border-radius: 10px;
+    border: 25px solid #C59A5D;
+    font-family: 'Indie Flower', cursive;
+}
+
+.service-card h5, .service-card p {
+    color: white;
+}
+
+.service-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.booking-bar input, .booking-bar select {
+    background-color: #EAEAEA;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.booking-bar .btn {
+    background-color: #D27C2C;
+    color: white;
+}
+
+.booking-bar .btn:hover {
+    background-color: #b46821;
+}
+
+.form-check-label {
+    color: white;
+}
+
+  /* --------- Customer Appointment Page --------- */
+
+/* Header */
+.appointmentHeader {
+    background: url('Appointment_hero.jpg') no-repeat center;
+    background-size: cover;
+    width: 100%;;
+    height: 300px; 
+    margin: 0;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+/* Appointments Section */
+
+h2 {
+    color: #2e2e2e;
+}
+
+/* Tables */
+.table {
+    table-layout: fixed;
+    width: 100%; 
+}
+
+th, td {
+    width: 33.33%; 
+}
+
+.table-dark{
+    --bs-table-bg: #8b5e3b;
+}
+
+th {
+    background-color: #8b5e3b;
+    color: white;
+}
+
+.appointments {
+    margin-bottom: 30px;
+}

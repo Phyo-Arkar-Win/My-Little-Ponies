@@ -1,0 +1,116 @@
+{% extends 'layout.html' %}
+
+{% block title %}Services{% endblock%}
+
+{% block nav%}
+<a class="navbar-brand" href="{{ url_for('userMainPage') }}">My Little Ponies Pet Spa</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
+        <li class="nav-item"><a class="nav-link  active" href="#">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Membership</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              John Doe
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="#">View Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+          </li>
+    </ul>
+</div>
+{% endblock %}
+{% block main %}
+    <header class="container-fluid services_page_hero px-5">
+        <div class="row justify-content-around align-items-center px-5">
+            <h2 class="text-start service-title col-10 ps-4">Available Services</h2>
+            <img src="static/Services_hero.png" alt="" class="col-2 img-fluid">
+        </div>
+    </header>
+    <div class="container">
+        <h2 class="mt-5 mb-4 fw-bold">Book an Appointment</h2>
+        <form method="POST">
+
+                <div class="service-card">
+                <div class="row mb-2 fw-bold">
+                    <div class="col-8 fs-3 text-decoration-underline">Service</div>
+                    <div class="col-4 text-end fs-3 text-decoration-underline">Price</div>
+                </div>
+                <hr class="border-white mb-3">
+                <div class="row mb-2">
+                    <div class="col-8">
+                    <div class="form-check">
+                        <input class="form-check-input" name="services" value="Eye Cleaning" type="checkbox" id="eyeCleaning">
+                        <label class="form-check-label" for="eyeCleaning">Eye Cleaning</label>
+                    </div>
+                    </div>
+                    <div class="col-4 text-end">40</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-8">
+                    <div class="form-check">
+                        <input class="form-check-input" name="services" value="Ear Cleaning" type="checkbox" id="earCleaning">
+                        <label class="form-check-label" for="earCleaning">Ear Cleaning</label>
+                    </div>
+                    </div>
+                    <div class="col-4 text-end">40</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-8">
+                    <div class="form-check">
+                        <input class="form-check-input" name="services" value="Teeth Cleaning" type="checkbox" id="teethCleaning">
+                        <label class="form-check-label" for="teethCleaning">Teeth Cleaning</label>
+                    </div>
+                    </div>
+                    <div class="col-4 text-end">25</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-8">
+                    <div class="form-check">
+                        <input class="form-check-input" name="services" value="Grooming" type="checkbox" id="grooming">
+                        <label class="form-check-label" for="grooming">Grooming</label>
+                    </div>
+                    </div>
+                    <div class="col-4 text-end">80</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-8">
+                    <div class="form-check">
+                        <input class="form-check-input" name="services" value="Nail Trimming" type="checkbox" id="nailTrimming">
+                        <label class="form-check-label" for="nailTrimming">Nail Trimming</label>
+                    </div>
+                    </div>
+                    <div class="col-4 text-end">40</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-8">
+                    <div class="form-check">
+                        <input class="form-check-input" name="services" value="Bathing" type="checkbox" id="bathing">
+                        <label class="form-check-label" for="bathing">Bathing</label>
+                    </div>
+                    </div>
+                    <div class="col-4 text-end">50</div>
+                </div>
+                </div>
+        
+            <!-- Booking Bar -->
+            <div class="booking-bar my-5 d-flex flex-wrap gap-2 justify-content-between">
+                <input type="date" class="form-control w-auto">
+                <select class="form-select w-auto px-5">
+                <option selected disabled>Pet Type</option>
+                <option>Dog</option>
+                <option>Cat</option>
+                <option>Rabbit</option>
+                </select>
+                <input type="text" class="form-control w-auto" placeholder="Pet name">
+                <button type="submit" class="btn px-5">Book</button>
+            </div>
+        </form>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+
+{% block title %} My Little Ponies Pet Spa {% endblock%}
+{% block nav %}
+    <a class="navbar-brand" href="{{ url_for('userMainPage') }}">My Little Ponies Pet Spa</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Membership</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  John Doe
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li><a class="dropdown-item" href="#">View Profile</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+                </ul>
+              </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container-fluid text-center" style="padding:0">
+            <img src="static/Banner1.png" class="img-fluid" alt="Groomer with Dog">
+            <h1 class="mt-4 mb-4">Welcome to <br> <strong>My Little Ponies Pet Spa!</strong></h1>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section class="services text-center">
+        <div class="services-content">
+            <img src="static/Banner2.png" class="img-fluid" alt="Services Background">
+        </div>
+        <div class="services-buttons">
+            <a href="{{ url_for('appointment') }}" class="text-decoration-none text-white">
+                <button class="btn service-btn">Appointments</button>
+            </a>
+            <a href="{{ url_for('services') }}" class="text-decoration-none text-white">
+                <button class="btn service-btn">Services</button>
+            </a>
+            <a href="#" class="text-decoration-none text-white">
+                <button class="btn service-btn">Membership</button>
+            </a>
+        </div>
+    </section>
+
+    <!-- Staff Section -->
+    <section class="d text-center">
+        <div class="container">
+            <h2>Staffs | Meet the Team</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="static/Staff_Tony.jpg" class="staff-img" alt="Phyo Arkar Win">
+                    <p>Name: Phyo Arkar Win</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="static/Staff_Romulus.jpg" class="staff-img" alt="Aung Pyae Sone">
+                    <p>Name: Aung Pyae Sone</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="static/Staff_Yu.jpg" class="staff-img" alt="Yu Yu Khaing">
+                    <p>Name: Yu Yu Khaing</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="static/Staff_Hsaung.jpg" class="staff-img" alt="Hsaung Thet Htar">
+                    <p>Name: Hsaung Thet Htar</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="static/Staff_Lu.jpg" class="staff-img" alt="Lu Chit">
+                    <p>Name: Lu Chit</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="static/Staff_Linn.jpg" class="staff-img" alt="Linn Hein Htet">
+                    <p>Name: Linn Hein Htet</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
