@@ -9,12 +9,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
-            <li class="nav-item"><a class="nav-link  active" href="{{ url_for('services') }}">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Membership</a></li>
+            <li class="nav-item"><a class="nav-link active" href="{{ url_for('appointment') }}">Appointment</a></li>
+            <li class="nav-item"><a class="nav-link " href="{{ url_for('services') }}">Services</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('membership') }}">Membership</a></li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    John Doe
+                    {% with message = get_flashed_messages() %}
+                        {{ message[0] }}
+                    {% endwith %}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li><a class="dropdown-item" href="#">View Profile</a></li>

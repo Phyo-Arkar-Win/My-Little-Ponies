@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block title %}Appointment Confirmed{% endblock%}
+{% block nav %}
+<a class="navbar-brand" href="customer_main.html">My Little Ponies Pet Spa</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('services') }}">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('membership') }}">Membership</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="{{ url_for('logout') }}" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% with messages = get_flashed_messages() %}
+                    {{ messages[0] }}
+                {% endwith %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="#">View Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Log Out</a></li>
+            </ul>
+          </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block main %}
+    <div class="container my-4">
+        <!-- Alert Message -->
+        <div class="alert alert-success text-start d-flex align-items-center gap-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i> <span>Thank you! Your appointment has been successfully booked.</span>
+        </div>
+
+        <!-- Appointment Summary Title -->
+        <div class="booking-heading d-flex align-items-center gap-3 mt-4">
+            <i class="bi bi-journals h3"></i>
+            <h2 class="">Booking Recipt</h2>
+        </div>
+
+        <!-- Appointment Card -->
+        <div class="card px-5 py-4 mt-2">
+            <div>
+                {% with messages = get_flashed_messages() %}
+                <p class="text-muted text-end text-decoration-underline mt-0 mb-0">{{ messages[3] }}</p>
+                <p class="mb-0 fs-5">{{ messages[1] }} | {{ messages[2] }}</p>
+                {% endwith %}
+            </div>
+
+            <hr> <!-- Divider Line -->
+
+            <!-- Services List -->
+            <div>
+                <p><strong class="fs-3 text-decoration-underline">Services</strong></p>
+                {% with messages = get_flashed_messages() %}
+                    {% for service in messages[4] %}
+                        <p class="mt-3">{{ service }}<span class="float-end">{{ messages[5][loop.index0] }}</span></p>
+                    {% endfor %}
+                {% endwith %}
+                <hr>
+                {% with messages = get_flashed_messages() %}
+                    <p>Subtotal <span class="float-end">{{ messages[6] }}</span></p>
+                    <p>Membership Discount <span class="float-end">{{ messages[7] }}%</span></p>
+                    <hr>
+                    <p><span class="fw-bold">Total</span> <span class="float-end">{{ messages[8] }}</span></p>
+                {% endwith %}
+            </div>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-3 d-flex justify-content-around pb-4">
+            <a href="{{ url_for('appointment') }}">
+                <button class="btn btn-outline-secondary py-2" style="padding: 0 64px;">View Appointment History</button>
+            </a>
+            <a href="{{ url_for('userMainPage') }}">
+                <button class="btn py-2 text-light confirm-btn" style="padding: 0 64px;">Back to Home Page</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

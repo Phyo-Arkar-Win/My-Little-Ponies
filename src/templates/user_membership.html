@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+
+{% block title %} Membership {% endblock%}
+{% block nav %}
+
+<a class="navbar-brand" href="{{ url_for('userMainPage') }}">My Little Ponies Pet Spa</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('membership') }}">Membership</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% with messages = get_flashed_messages() %}
+                    {{ messages[0] }}
+                {% endwith %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="#">View Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+          </li>
+    </ul>
+</div>
+
+{% endblock%}
+
+{% block main %}
+    <header class="membership-header text-dark text-center p-5 position-relative" style="background: url('static/Regular_membership.png') center/cover no-repeat;">
+        <h1 class="display-5 fw-bold mb-5">Pet Spa Membership</h1>
+        <div class="container position-absolute bottom-0 mb-5">
+            <div class="row">
+                <div class="col-12 d-flex align-items-center justify-content-between fs-5">
+                    <!-- Current Type Section -->
+                    <div class="d-flex align-items-center gap-2 ms-5">
+                        <span class="text-dark fw-bolder">Current Membership Type :</span>
+                        <div class="px-3 py-2 rounded-2 text-white bg-dark">
+                            {% with messages = get_flashed_messages() %}
+                                {{ messages[1] }}
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <!-- Spend Section -->
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-dark fw-bolder">Spend :</span>
+                        <div class="text-dark rounded-2 bg-light px-3 py-1">1000 / 5000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    
+    
+    <div class="container my-5">
+        <h2 class="text-center fw-bold" style="text-decoration: underline">Types of Membership</h2>
+        <div class="row mt-4 position-relative">
+            <div class="col-md-4 d-flex">
+                <div class="p-3 text-start rounded d-flex flex-column w-100" style="background-color: #fff;">
+                    <h4 class="text-center">New</h4>
+                    <p><span class="text-success">✔</span>
+                        {% with messages = get_flashed_messages() %}
+                            {{ messages[2] }} Discount
+                        {% endwith %}
+                    </p>
+                    <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
+                        {% with messages = get_flashed_messages() %}
+                            &#3647;{{ messages[3] }}
+                        {% endwith %}
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 d-flex">
+                <div class="p-3 text-start rounded d-flex flex-column w-100" style="background-color: #c0c0c0;">
+                    <h4 class="text-center">Regular</h4>
+                    <p><span class="text-success">✔</span>
+                    {% with messages = get_flashed_messages() %}
+                        {{ messages[4] }} Discount
+                    {% endwith %}
+                    </p>
+                    <!-- <p>Congrats, you have booked more than one appointment. You will get more discount.</p> -->
+                    <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
+                        {% with messages = get_flashed_messages() %}
+                            &#3647;{{ messages[5] }}
+                        {% endwith %}
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 d-flex">
+                <div class="p-3 text-start rounded d-flex flex-column w-100" style="background-color: #f5b742;">
+                    <h4 class="text-center">Premium</h4>
+                    <p><span class="text-success">✔</span>
+                        {% with messages = get_flashed_messages() %}
+                            {{ messages[6] }} Discount
+                        {% endwith %}
+                    </p>
+                    <!-- <p>Congrats, your membership has been upgraded to the max. At this point, you will get more discounts.</p> -->
+                    <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
+                        {% with messages = get_flashed_messages() %}
+                            &#3647;{{ messages[7] }}
+                        {% endwith %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

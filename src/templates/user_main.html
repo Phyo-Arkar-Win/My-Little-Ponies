@@ -10,10 +10,12 @@
         <ul class="navbar-nav ms-auto">
             <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Membership</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('membership') }}">Membership</a></li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  John Doe
+                    {% with message = get_flashed_messages() %}
+                        {{ message[0] }}
+                    {% endwith %}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                   <li><a class="dropdown-item" href="#">View Profile</a></li>
@@ -46,7 +48,7 @@
             <a href="{{ url_for('services') }}" class="text-decoration-none text-white">
                 <button class="btn service-btn">Services</button>
             </a>
-            <a href="#" class="text-decoration-none text-white">
+            <a href="{{ url_for('membership') }}" class="text-decoration-none text-white">
                 <button class="btn service-btn">Membership</button>
             </a>
         </div>

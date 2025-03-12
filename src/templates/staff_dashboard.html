@@ -1,0 +1,128 @@
+{% extends 'layout.html' %}
+{% block title %}Staff Dashboard{% endblock%}
+{% block nav %}
+
+    <a class="navbar-brand" href="customer_main.html">My Little Ponies Pet Spa</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% with messages = get_flashed_messages() %}
+                            {{ messages[0] }}
+                    {% endwith %}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown"> 
+                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="container mt-4 container-custom">
+
+        <div class="staff-header fw-bold h1 text-center position-relative">
+            <h2 class="position-absolute top-50 start-50 translate-middle">Welcome,
+                {% with messages = get_flashed_messages() %}
+                    {{ messages[0] }}!
+                {% endwith %}
+            </h2>
+                <img src="static/cute-pink-cat-paw.png" style="width: 150px;" class="position-absolute bottom-0 start-0">
+            <img src="static/cute-pink-cat-paw.png" style="width: 150px;" class="position-absolute bottom-0 end-0">
+
+        </div>
+        
+        <div class="mt-5">
+            <label class="form-label h4">Search Pet By Customer-Name</label>
+            <form method="POST" action="{{ url_for('petSearch') }}">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="usernameForPetSearch" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                </div>
+            </form>
+            <div class="mt-2 p-3 border border-secondary-subtle">
+                <div class="table-header d-flex">
+                    <div class="col-2">Number</div>
+                    <div class="col-2">Name</div>
+                    <div class="col-2">Type</div>
+                </div>
+                <div id="pet-list">
+                    {% with messages = get_flashed_messages() %}
+                        {% for message in messages[1] %}
+                            <div class="table-row d-flex">
+                                <div class="col-2">{{ loop.index }}</div>
+                                <div class="col-2">{{ message[0] }}</div>
+                                <div class="col-2">{{ message[1] }}</div>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-5 border border-2 rounded container1 p-3">
+            <div class="staff-appointment-header fw-bold h4">Appointments</div>
+            <div class="table-header d-flex">
+                <div class="col-3">Date</div>
+                <div class="col-3">Pet&apos;s Name</div>
+                <div class="col-3">Pet&apos;s Type</div>
+                <div class="col-3">Services</div>
+            </div>
+        
+            <div id="pet-list">
+                <form method="POST" action="{{ url_for('deleteAppointment') }}">
+                    {% with messages = get_flashed_messages() %}
+                        {% for message in messages[2] %}
+                            <div class="table-row d-flex align-items-center">
+                                <div class="col-3">{{ message[1] }}</div>  <!-- Message[0] (Date) -->
+                                <div class="col-3">{{ message[2] }}</div>  <!-- Message[1] (Pet's Name) -->
+                                <div class="col-3">{{ message[3] }}</div>  <!-- Message[2] (Pet's Type) -->
+                                <div class="col-3 d-flex justify-content-between align-items-center">
+                                    {{ message[4] }} 
+                                    <input 
+                                        class="form-check-input" 
+                                        value="{{ message[0] }}" 
+                                        type="checkbox" 
+                                        name="appointment_checkboxes">
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                    <!-- Submit Button -->
+                    <button class="btn btn-danger mt-3 px-4" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+        
+        
+        <div class="mt-5 border border-2 rounded container1 p-3">
+            <h4 class="mb-3 fw-bold">Service History</h4>
+            <div class="table-header d-flex">
+                <div class="col-3">Date</div>
+                <div class="col-3">Pet&apos;s Name</div>
+                <div class="col-3">Pet&apos;s Type</div>
+                <div class="col-3">Services</div>
+            </div>
+            <div id="appointment-list">
+                {% with messages = get_flashed_messages() %}
+                    {% for message in messages[2] %}
+                        <div class="table-row d-flex">
+                            <div class="col-3">{{ message[1] }}</div>
+                            <div class="col-3">{{ message[2] }}</div>
+                            <div class="col-3">{{ message[3] }}</div>
+                            <div class="col-3">{{ message[4] }}</div>
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+                
+            </div>
+            <hr class="my-2"> <!-- Divider line-->
+        </div>
+    </div>
+
+{% endblock %}

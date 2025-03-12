@@ -24,9 +24,6 @@ body {
     margin-top: 15vh;
 }
 
-.form-control {
-    background-color: #f1dfdc;
-}
 .btn-custom {
     background-color: #4a3828;
     color: white;
@@ -67,7 +64,7 @@ body {
     background-color: #D27C2C; 
     color: white;
     font-size: 18px;
-    padding: 10px 20px;
+    padding: 10px px;
     margin: 10px;
     border-radius: 5px;
     border: none;
@@ -156,15 +153,11 @@ body {
     background-color: #b46821;
 }
 
-.form-check-label {
-    color: white;
-}
-
-  /* --------- Customer Appointment Page --------- */
+/* --------- Customer Appointment Page --------- */
 
 /* Header */
-.appointmentHeader {
-    background: url('Appointment_hero.jpg') no-repeat center;
+.header {
+    background: url('img/Appointment_hero.jpg') no-repeat center;
     background-size: cover;
     width: 100%;;
     height: 300px; 
@@ -179,6 +172,27 @@ body {
 
 h2 {
     color: #2e2e2e;
+}
+.table-container {
+    max-width: 80%;
+    margin: auto;
+    background: #fdfbf6;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.table-header {
+    background-color: #f8d98d;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+}
+.table-row {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.table-row:last-child {
+    border-bottom: none;
 }
 
 /* Tables */
@@ -202,4 +216,119 @@ th {
 
 .appointments {
     margin-bottom: 30px;
+}
+
+
+/* ---------- Customer Membership Page ---------- */
+.membership-header {
+    background: linear-gradient(45deg, #d48b32, #f0a042);
+    width: 100%;
+    height: 300px;
+}
+
+.form-control {
+    text-align: start;
+}
+
+/* --------- Customer Confirmation Page --------- */
+.staff-services-table th, td {
+    width: 33.33%; /* Each column takes up equal space */
+}
+
+.confirm-btn:hover {
+    background-color: #b46821; 
+}
+
+/* Customer Confirmed Page */
+.confirm-btn{
+    background-color: #d87c30;
+}
+.confirm-btn:hover {
+    background-color: #b46821; 
+    color: #fff;
+}
+
+
+/* Staff Management */
+.search-container {
+    display: flex;
+    align-items: center;
+    background: #e5e0de; /* Light background */
+    border-radius: 20px; /* Rounded edges */
+    padding: 8px 15px;
+    width: 100%;
+}
+
+.search-container input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+}
+
+.search-container .search-icon {
+    font-size: 18px;
+    color: black;
+    cursor: pointer;
+}
+
+
+
+.container-custom {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+
+.staff-header {
+    background: #f8d47b;
+    height: 300px;
+}
+
+.staff-appointment-header {
+    padding: 8px;
+    border-radius: 9px;
+}
+
+
+input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid black;
+    border-radius: 3px;
+    background-color: white;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+}
+
+input[type="checkbox"]:checked {
+    background-color: black;
+    border: 2px solid black;
+}
+
+input[type="checkbox"]::after {
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+}
+
+input[type="checkbox"]:checked::after {
+    visibility: visible;
+}
+
+.border {
+    border-radius: 10px;
 }
