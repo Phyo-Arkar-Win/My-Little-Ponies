@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+{% block title %}Edit Profile{% endblock%}
+{% block nav %}
+
+    <a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% with messages = get_flashed_messages() %}
+                        {{ messages[0] }}
+                    {% endwith %}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown"> 
+                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block main %}
+<div class="edit-container">
+    <h3 class="mt-2">Edit Name</h3>
+    {% with messages = get_flashed_messages() %}
+        <p>Current Name: {{ messages[0] }}</p>
+    {% endwith %}
+    <form method="POST" action="{{ url_for('changeName') }}" >
+        <div class="mb-3 mt-3">
+            <input type="text" class="form-control" name="newName" placeholder="New Name" required>
+        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages[1] == "Name Change Success" %}
+                <!-- Alert when password matched -->
+                <div class="alert alert-success text-start d-flex align-items-center gap-2" role="alert">
+                    <i class="bi bi-check-circle-fill"></i><span>Profile Name Updated!</span>
+                </div>
+            {% endif %}
+        {% endwith %}
+        <button type="submit" class="btn save-btn">Save Changes</button>
+    </form>
+</div>
+
+<div class="edit-container">
+    <h3 class="mt-2">Edit Password</h3>
+    <form method="POST" action="{{ url_for('changePassword') }}">
+        <div class="mb-2 mt-3">
+            <input type="password"  name="oldPassword" class="form-control mb-3" placeholder="Old Password">
+        </div>
+        <div class="mb-3">
+            <input type="password" name="newPassword" class="form-control" placeholder="New Password">
+        </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages[1] == "Success" %}
+                    <!-- Alert when password matched -->
+                    <div class="alert alert-success text-start d-flex align-items-center gap-2" role="alert">
+                        <i class="bi bi-check-circle-fill"></i><span>Password updated!</span>
+                    </div>
+                {% elif messages[1] == "Failed" %}
+                    <!-- Alert when incorrect password -->
+                    <div class="alert alert-danger text-start d-flex align-items-center gap-2" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill p-0"></i><span>Incorrect Password.</span>
+                    </div>
+                {% endif %}
+            {% endwith %}
+    
+        <!-- Submit button -->
+        <button type="submit" class="btn save-btn">Save Changes</button>
+    </form>
+</div>
+
+{% endblock %}

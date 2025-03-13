@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block title %}Appointment Confirmed{% endblock%}
 {% block nav %}
-<a class="navbar-brand" href="customer_main.html">My Little Ponies Pet Spa</a>
+<a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
     <span class="navbar-toggler-icon"></span>
 </button>
@@ -9,17 +9,17 @@
     <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
         <li class="nav-item"><a class="nav-link active" href="{{ url_for('services') }}">Services</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('membership') }}">Membership</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('userMembership') }}">Membership</a></li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="{{ url_for('logout') }}" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {% with messages = get_flashed_messages() %}
                     {{ messages[0] }}
                 {% endwith %}
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-              <li><a class="dropdown-item" href="#">View Profile</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('customerEditProfile') }}">View Profile</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Log Out</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
             </ul>
           </li>
     </ul>
@@ -74,7 +74,7 @@
             <a href="{{ url_for('appointment') }}">
                 <button class="btn btn-outline-secondary py-2" style="padding: 0 64px;">View Appointment History</button>
             </a>
-            <a href="{{ url_for('userMainPage') }}">
+            <a href="{{ url_for('userMain') }}">
                 <button class="btn py-2 text-light confirm-btn" style="padding: 0 64px;">Back to Home Page</button>
             </a>
         </div>

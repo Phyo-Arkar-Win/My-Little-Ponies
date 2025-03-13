@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+{% block title %}Admin Dashboard{% endblock%}
+{% block nav %}
+    <a class="navbar-brand" href="{{ url_for('adminDashboard') }}">My Little Ponies Pet Spa</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('adminDashboard')}}">Management</a></li>
+                    <li class="nav-item"><a class="nav-link" href=" {{ url_for('adminServicesMembership' )}}">Service and Membership</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% with messages = get_flashed_messages() %}
+                                {{ messages[0] }}
+                            {% endwith %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                          <li><a class="dropdown-item" href="{{ url_for('customerEditProfile') }}">View Profile</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+                        </ul>
+                      </li>
+                </ul>
+        </div>
+{% endblock %}
+
+{% block main %}
+    <div class="dashboard-header">Admin Dashboard</div>
+    
+    <div class="container mt-4">
+        <div class="admin-dashboard-card">
+            <h5 class="fw-bold">Recruit New Staff</h5>
+            <form method="POST" action="{{ url_for('recruitStaff') }}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="usernameToAdd" placeholder="Enter staff username">
+                    <input type="password" class="form-control" name="newUserPassword" placeholder="Enter password">
+                    <button type="submit" class="btn btn-success rounded-3"  style="padding: 12px 24px;">Hire</button>
+                </div>
+            </form>
+            {% with messages = get_flashed_messages() %}
+                {% if messages[1] == "Failed" %}
+                    <div class="alert alert-warning text-center align-items-center gap-2 mt-3" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill p-0"></i> <span class="text-center">Username already exists!</span>
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <div class="container admin-dashboard-card">
+            <h5 class="fw-bold my-2">Check Staff</h5>
+    
+            <div class="input-group">
+                <input type="text" name="staffNameToSearch" class="form-control" placeholder="Enter staff username">
+                <form method="POST" action="{{ url_for('findStaff') }}">
+                    <button type="submit" class="input-group-text search-icon px-4">
+                        <i class="bi bi-seach"></i>
+                    </button>
+                </form>
+                <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+            </div>
+            <div class="my-2 d-flex align-items-center justify-content-between">
+                {% with messages = get_flashed_messages() %}
+                        <p class="mb-0"><strong>Staff Name </strong> : {{messages[0]}}</p>
+                {% endwith %}
+                <form method="POST" action="{{ url_for('deleteStaff') }}">
+                    <button type="submit" class="btn rounded-3 btn-danger" style="padding: 12px 24px;">Fire</button>
+                </form>
+            </div>
+           
+            <table class="table"> 
+                <thead class="table-warning">
+                    <tr>
+                        <th>Date</th>
+                        <th>Pet&apos;s Name</th>
+                        <th>Pet&apos;s Type</th>
+                        <th>Services</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% with messages = get_flashed_messages() %}
+                        {% for data in messages[1] %}
+                        <tr>
+                            <td>{{ data[0] }}</td>
+                            <td>{{ data[1] }}</td>
+                            <td>{{ data[2] }}</td>
+                            <td>{{ data[3] }}</td>
+                        </tr>
+                        {% endfor %}    
+                    {% endwith %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -107,18 +107,18 @@ class Customer(User):
         if current_spending >= system.membership_benefits["Premium"]["spending_limit"]:
             self.membership = "Premium"
             db.execute('''
-                            UPDATE your_table_name
+                            UPDATE testing
                             SET user_object = ?
                             WHERE username = ?
-                        ''', (self, self.username)) 
+                        ''', (pickle.dumps(self), self.username)) 
             con.commit()
         elif current_spending >= system.membership_benefits["Regular"]["spending_limit"]:
             self.membership = "Regular"
             db.execute('''
-                            UPDATE your_table_name
+                            UPDATE testing
                             SET user_object = ?
                             WHERE username = ?
-                        ''', (self, self.username)) 
+                        ''', (pickle.dumps(self), self.username)) 
             con.commit()
         else:
             pass
@@ -414,10 +414,10 @@ def signupPage():
             # Remembering users using session
             db.execute('SELECT * FROM testing WHERE username=?', [username])
             user = db.fetchall()
+            # Clear session and log in with the signed up account
             session.clear()
             session['user_id'] = user[0]['id']
-            return redirect('/userMain')
-
+            return redirect('/reroute')
     elif request.method == 'GET':
         return render_template('signup.html')
 
@@ -434,73 +434,71 @@ def redirectLogin():
     else:
         return redirect('/login')
 
+
 # Route for log in page
 @app.route('/login', methods=['GET', 'POST'])
 def loginPage():
-
     if request.method == 'GET':
         if 'user_id' in session:
             # NEEDS EDITING
-            if user[0]['type'] == 'Owner':
-                pass
-            elif user[0]['type'] == 'Admin':
-                pass
-            elif user[0]['type'] == 'Staff':
-                return render_template('staffDashboard.html')
-            else:
-                return render_template('user_main.html')
+            return redirect('/reroute') 
+        else:
             return render_template('login.html')
-            
-        return render_template('login.html')
     
     elif request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         db.execute('SELECT * FROM testing WHERE username=?', [username])
         user = db.fetchall()
+        # Check if the username exists
         if not user:
             flash("Invalid Username.")
             return render_template('login.html')
+        # Check password validation
         unserialized_user_object = pickle.loads(user[0]['user_object'])
         if not check_password_hash(unserialized_user_object.password, password):
-
             flash('Invalid Username or Password.')
             return render_template('login.html')
         else:
             session['user_id'] = user[0]['id']
-            # Redirections based on account type
-            if user[0]['type'] == 'Owner':
-                pass
-            elif user[0]['type'] == 'Admin':
-                pass
-            elif user[0]['type'] == 'Staff':
-                return redirect('/staffDashboard')
-            else:
-                return redirect('/userMain')
+            return redirect('/reroute')
             
 # route for user main page
 @app.route('/userMain')
-def userMainPage():
+def userMain():
     if 'user_id' in session:
         db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
         user = db.fetchall()
-        username = pickle.loads(user[0]['user_object']).name
-        flash(username)
+        name = pickle.loads(user[0]['user_object']).name
+        # Flash name on nav bar 
+        flash(name)
         return render_template('user_main.html')
     else:
         return redirect('/login')
-    
+
 # route for services
 @app.route('/services', methods=['GET','POST'])
 def services():
     # Ensuring user's logged in
     if 'user_id' in session:
         if request.method == 'GET':
-            # Flashing username in nav bar
             db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
             user = db.fetchall()
-            username = pickle.loads(user[0]['user_object']).name
-            flash(username)
+            
+            # Rerouting if the user isn't a customer
+            if user[0]['type'] != 'Customer':
+                return redirect('/reroute')
+            name = pickle.loads(user[0]['user_object']).name
+            # Flash display name on  nav bar
+            flash(name)
+
+            # Flash service list
+            db.execute('SELECT * FROM services')
+            services = db.fetchall()
+            serviceList = []
+            for service in services:
+                serviceList.append([service['name'], service['price']])
+            flash(serviceList)
             return render_template('services.html')
         
         # For redirecting to appointmentConfirmation after pressing "book"
@@ -538,12 +536,17 @@ def appointmentConfirmation():
             # Fetch user_obj from database
             db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
             user = db.fetchall()
+            username = user[0]['username']
 
+            db.execute('SELECT * FROM services')
+            services = db.fetchall()
             # Calculation of total price
             selected_services_prices = []
             for selected_service in selected_services:
-                if selected_service in spa_system.services:
-                    selected_services_prices.append(spa_system.services[selected_service])
+                for service in services:
+                    if selected_service == service['name']:
+                       selected_services_prices.append(service['price'])
+                       print(service['price'])
             
             totalPrice = 0
             totalPrice += sum(selected_services_prices)
@@ -552,48 +555,41 @@ def appointmentConfirmation():
             unserialized_user = pickle.loads(user[0]['user_object'])
             membership_type = unserialized_user.membership
             discount = int(spa_system.membership_benefits[membership_type]["discount"][:-1])
-            finalPrice = int(totalPrice - totalPrice * (discount / 100))
+            finalPrice = int(totalPrice - (totalPrice * (discount / 100)))
 
-        # Insert into appointment_summary database
-        db.execute('''
-                    INSERT INTO appointment_summary (username, name, petName, petType, date, 
-                    selected_services, selected_services_prices, 
-                    totalPrice, discount, finalPrice)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
-                    (unserialized_user.username, name, petName, petType, date, 
-                    pickle.dumps(selected_services), pickle.dumps(selected_services_prices), 
-                    totalPrice, discount, finalPrice))
-        con.commit()
-        # flash(name, petName, petType, date, selected_services,selected_services_prices, totalPrice, discount, finalPrice)
-        # Flash 0
-        flash(name)
-        # Flash 1
-        flash(petName)
-        # Flash 2
-        flash(petType)
-        # Flash 3
-        flash(date)
-        # Flash 4
-        flash(selected_services)
-        # Flash 5
-        flash(selected_services_prices)
-        # Flash 6
-        flash(totalPrice)
-        # Flash 7
-        flash(discount)
-        # Flash 8
-        flash(finalPrice)
+            # Insert into appointment_summary database
+            db.execute('''
+                        INSERT INTO appointment_summary (username, name, petName, petType, date, 
+                        selected_services, selected_services_prices, 
+                        totalPrice, discount, finalPrice)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', 
+                        (unserialized_user.username, name, petName, petType, date, 
+                        pickle.dumps(selected_services), pickle.dumps(selected_services_prices), 
+                        totalPrice, discount, finalPrice))
+            con.commit()
+            # flash(name, petName, petType, date, selected_services,selected_services_prices, totalPrice, discount, finalPrice)
+            # Flash 0
+            flash(name)
+            # Flash 1
+            flash(petName)
+            # Flash 2
+            flash(petType)
+            # Flash 3
+            flash(date)
+            # Flash 4
+            flash(selected_services)
+            # Flash 5
+            flash(selected_services_prices)
+            # Flash 6
+            flash(totalPrice)
+            # Flash 7
+            flash(discount)
+            # Flash 8
+            flash(finalPrice)
 
-        # Create appointment object
-        # unserialized_user.book_appointment(date, petName, petType, selected_services, spa_system)
-        return render_template("appointment_confirmation.html")
+            return render_template("appointment_confirmation.html")
     elif request.method == "POST":
         return redirect(url_for('appointmentConfirmed'))
-        # return redirect(url_for('appointmentConfirmed', 
-        #                 name=name, petName=petName, petType=petType, 
-        #                 date=date, selected_services_list=",".join(selected_services), 
-        #                 selected_services_prices_list=",".join(selected_services_prices),
-        #                 discount=discount,finalPrice=finalPrice))
 
 # Route for confirmed appointment
 @app.route('/appointmentConfirmed', methods=['GET', 'POST'])
@@ -621,57 +617,336 @@ def appointmentConfirmed():
             totalPrice = appointmentHistory[0]['totalPrice']
             discount = appointmentHistory[0]['discount']
             finalPrice = appointmentHistory[0]['finalPrice']
-            
-        # Flash 0
-        flash(username)
-        # Flash 1
-        flash(petName)
-        # Flash 2
-        flash(petType)
-        # Flash 3
-        flash(date)
-        # Flash 4
-        flash(selected_services)
-        # Flash 5
-        flash(selected_services_prices)
-        # Flash 6
-        flash(totalPrice)
-        # Flash 7
-        flash(discount)
-        # Flash 8
-        flash(finalPrice)
+            user_obj.spending += finalPrice
+            user_obj.update_membership(spa_system)
 
-        # Create appointment object
-        for i in range(len(selected_services)):
-            appointment_obj = user_obj.book_appointment(date, petName, petType, selected_services[i], spa_system)
+            # Update spending in database
             db.execute('''
-                        INSERT INTO appointments(username, appointment_object)
-                        VALUES (?, ?)
-                       ''', (username, pickle.dumps(appointment_obj)))
+                            UPDATE testing
+                            SET user_object = ?
+                            WHERE username = ?
+                        ''', (pickle.dumps(user_obj), username)) 
             con.commit()
-        user_obj.spending = finalPrice
-        user_obj.update_membership(spa_system)
+            
+            # Flash 0
+            flash(name)
+            # Flash 1
+            flash(petName)
+            # Flash 2
+            flash(petType)
+            # Flash 3
+            flash(date)
+            # Flash 4
+            flash(selected_services)
+            # Flash 5
+            flash(selected_services_prices)
+            # Flash 6
+            flash(totalPrice)
+            # Flash 7
+            flash(discount)
+            # Flash 8
+            flash(finalPrice)
 
-        # unserialized_user.book_appointment(date, petName, petType, selected_services, spa_system)
-        return render_template("appointment_confirmed.html")
+            # Create appointment object
+            for i in range(len(selected_services)):
+                appointment_obj = user_obj.book_appointment(date, petName, petType, selected_services[i], spa_system)
+                db.execute('''
+                            INSERT INTO appointments(username, appointment_object)
+                            VALUES (?, ?)
+                        ''', (username, pickle.dumps(appointment_obj)))
+                con.commit()
+
+            # unserialized_user.book_appointment(date, petName, petType, selected_services, spa_system)
+            return render_template("appointment_confirmed.html")
 
 # route for appointment
 @app.route('/appointment')
-def appointment():
+def appointment():  
     db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
     user = db.fetchall()
-    username = pickle.loads(user[0]['user_object']).name
-    flash(username)
+    name = pickle.loads(user[0]['user_object']).name
+
+    # Flash display name on nav bar
+    flash(name)
+
+    username = pickle.loads(user[0]['user_object']).username
+    db.execute('SELECT * FROM appointments WHERE username=?', (username,))
+    appointments = db.fetchall()
+    current_date = datetime.today().date()
+    pastAppointments = []
+    upcomingAppointments = []
+
+    # Seperate appointmnets into upcoming and history tables
+    for appointment in appointments:
+        appointment_obj = pickle.loads(appointment['appointment_object'])
+        appointment_date = datetime.strptime(appointment_obj.date, '%Y-%m-%d').date()
+        # print(f"Appointment date: {appointment_obj.date}, current date: {current_date}")
+        if current_date > appointment_date:
+            pastAppointments.append([appointment_obj.date, appointment_obj.pet_name, appointment_obj.pet_type, appointment_obj.service_name])
+        else:
+            upcomingAppointments.append([appointment_obj.date, appointment_obj.pet_name, appointment_obj.pet_type, appointment_obj.service_name])
+    
+    # Flash appointments
+    flash(upcomingAppointments)
+    flash(pastAppointments)
     return render_template('appointment.html')
 
 # route for customer membership
-@app.route('/membership')
-def membership():
+@app.route('/userMembership')
+def userMembership():
     db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
     user = db.fetchall()
-    username = pickle.loads(user[0]['user_object']).name
-    membership_type = pickle.loads(user[0]['user_object']).membership
+    name = pickle.loads(user[0]['user_object']).name
 
+    # Flash display name on nav bar
+    flash(name)
+
+    unserialized_user = pickle.loads(user[0]['user_object'])
+
+    # Flash user's membership type
+    membership_type = unserialized_user.membership
+    flash(membership_type)
+
+    # Flash user's total spending
+    spending = unserialized_user.spending
+    flash(spending)
+
+    # Discounts and minimum spendings for respective member types
+    # For new members
+    new_discount = spa_system.membership_benefits["New"]["discount"]
+    newMinimumSpending = spa_system.membership_benefits["New"]["spending_limit"]
+    
+    # For regular members
+    regular_discount = spa_system.membership_benefits["Regular"]["discount"]
+    regularMinimumSpending = spa_system.membership_benefits["Regular"]["spending_limit"]
+    
+    # For premium members
+    premium_discount = spa_system.membership_benefits["Premium"]["discount"]
+    premiumMinimumSpending = spa_system.membership_benefits["Premium"]["spending_limit"]
+    
+    flash(new_discount)
+    flash(newMinimumSpending)
+    flash(regular_discount)
+    flash(regularMinimumSpending)
+    flash(premium_discount)
+    flash(premiumMinimumSpending)
+    return render_template('user_membership.html')
+
+# Route for customer edit profile
+@app.route('/customerEditProfile')
+def customerEditProfile():
+    # Flashing name in nav bar
+    db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+    user = db.fetchall()
+    user_obj = pickle.loads(user[0]['user_object'])
+    flash(user_obj.name)
+
+    return render_template('customer_edit_profile.html')
+
+# Route to change name
+@app.route('/changeName', methods=['GET','POST'])
+def changeName():
+    if request.method == 'POST':
+        newName = request.form.get("newName")
+        db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+        user = db.fetchall()
+        user_obj = pickle.loads(user[0]['user_object'])
+        user_obj.name = newName 
+        db.execute('UPDATE testing SET user_object=? WHERE id=?', (pickle.dumps(user_obj), session['user_id']))
+        con.commit()
+
+        # Flashing display name in nav bar
+        db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+        user = db.fetchall()
+        user_obj = pickle.loads(user[0]['user_object'])
+        flash(user_obj.name) 
+        flash("Name Change Success")
+        return render_template('customer_edit_profile.html')
+
+# Route for editing password
+@app.route('/changePassword', methods=['GET','POST'])
+def changePassword():
+    if request.method == 'POST':
+        # Flashing name in nav bar
+        db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+        user = db.fetchall()
+        user_obj = pickle.loads(user[0]['user_object'])
+        currentName = user_obj.name
+        flash(currentName)  
+
+        oldPassword = request.form.get("oldPassword")
+        newPassword = request.form.get("newPassword")
+        if not check_password_hash(user_obj.password, oldPassword):
+            flash("Failed")
+        else:
+            print(user_obj.password)
+            user_obj.password = generate_password_hash(newPassword, method='pbkdf2:sha256', salt_length=8)
+            db.execute('UPDATE testing SET user_object=? WHERE id=?', (pickle.dumps(user_obj), session['user_id']))
+            con.commit()
+            print("success")
+            flash("Success")
+        return render_template('customer_edit_profile.html')
+
+@app.route('/ownerDashboard')
+def ownerDashboard():   
+    # Flashing username in nav bar
+    db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+    user = db.fetchall()
+    name = pickle.loads(user[0]['user_object']).name
+    flash(name)
+
+    # Flash staff list  
+    db.execute("SELECT * FROM testing WHERE type = 'Admin' OR type = 'Staff'")
+    staffs = db.fetchall()
+    staff_list = []
+    for staff in staffs:
+        staff_list.append([(pickle.loads(staff['user_object'])).name,staff['username'], staff['type']])
+    flash(staff_list)
+    
+    # Flash services
+    db.execute('SELECT * FROM services')
+    services = db.fetchall()
+    serviceList = []
+    for service in services:
+        serviceList.append([service['name'], service['price']])
+    flash(serviceList)
+
+    # Flash service to delete
+    serviceListToDelete = []
+    for service in services:
+        serviceListToDelete.append(service['name'])
+    flash(serviceListToDelete)
+
+    # Flash discount and spending   
+        # Discounts and minimum spendings for respective member types
+    # For new members
+    new_discount = spa_system.membership_benefits["New"]["discount"]
+    newMinimumSpending = spa_system.membership_benefits["New"]["spending_limit"]
+    
+    # For regular members
+    regular_discount = spa_system.membership_benefits["Regular"]["discount"]
+    regularMinimumSpending = spa_system.membership_benefits["Regular"]["spending_limit"]
+    
+    # For premium members
+    premium_discount = spa_system.membership_benefits["Premium"]["discount"]
+    premiumMinimumSpending = spa_system.membership_benefits["Premium"]["spending_limit"]
+    flash(new_discount)
+    flash(newMinimumSpending)
+    flash(regular_discount)
+    flash(regularMinimumSpending)
+    flash(premium_discount)
+    flash(premiumMinimumSpending)
+
+    return render_template('owner_dashboard.html')
+
+# Route for generating report
+@app.route('/ownerGenerateReport', methods=['GET','POST'])
+def ownerGenerateReport():
+    if request.method == "POST":
+        # Flash display name on nav bar
+        db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+        user = db.fetchall()
+        name = pickle.loads(user[0]['user_object']).name
+        flash(name)
+        db.execute("SELECT * FROM appointments")
+        appointments = db.fetchall()
+        appointment_list = []
+        for appointment in appointments:
+            appointment_obj = pickle.loads(appointment['appointment_object'])
+            appointment_list.append([appointment_obj.date, appointment_obj.pet_name, appointment_obj.pet_type, appointment_obj.service_name])
+        flash(appointment_list)
+        return render_template('ownerReport.html')
+
+# Route for staff dashboard
+@app.route('/staffDashboard')
+def staffDashboard():   
+    db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+    user = db.fetchall()
+    flash(pickle.loads(user[0]['user_object']).name)
+    return render_template('staff_dashboard.html')
+
+@app.route('/adminDashboard')
+def adminDashboard():
+    return render_template('admin_dashboard.html')
+
+# Route for recruiting new staff
+@app.route('/recruitStaff', methods=['GET','POST'])
+def recruitStaff():
+    if request.method == "POST":
+        # Flash display name on nav bar
+        db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+        user = db.fetchall()
+        name = pickle.loads(user[0]['user_object']).name
+        flash(name)
+
+        username = request.form.get("usernameToAdd")
+        password = request.form.get("newUserPassword")
+        db.execute("SELECT * FROM testing")
+        users = db.fetchall()
+        for user in users:
+            if username == user['username']:
+                flash("Failed")
+                return render_template('admin_dashboard.html')
+        flash("Success")
+
+        db.execute('''
+            INSERT INTO testing (type, username, user_object)
+            VALUES (?,?,?)
+        ''', ("Staff", username, password))
+        con.commit()
+        return render_template("admin_dashboard.html")
+        
+# Route for finding staffs
+@app.route('/findStaff', methods=["GET", "POST"])
+def findStaff():
+    if request.method == "POST":
+        # Flash display name on nav bar
+        db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+        user = db.fetchall()
+        name = pickle.loads(user[0]['user_object']).name
+        flash(name)
+
+        staffUsernameToSearch = request.form.get("staffNameToSearch")
+        db.execute("SELECT * FROM appointments")
+        appointments = db.fetchall
+        appointment_list = []
+        for appointment in appointments:
+            appointment_obj = pickle.loads(appointment['appointment_object'])
+            if appointment_obj['staff_username'] == staffUsernameToSearch:
+                appointment_list.append([appointment_obj.date, appointment_obj.pet_name, appointment_obj.pet_type, appointment_obj.service_name])
+        flash(appointment_list)
+        return render_template("admin_dashboard.html")
+    
+# Route for deleting staffs
+@app.route('/deleteStaff', methods=["GET", "POST"])
+def deleteStaff():
+    if request.method == "POST":
+        # Flash display name on nav bar
+        db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+        user = db.fetchall()
+        name = pickle.loads(user[0]['user_object']).name
+        flash(name)
+
+        staffToDelete = request.form.get("staffNameToSearch")
+        print(staffToDelete)
+    
+# Route for admin dashboard
+@app.route('/admin_services_membership')
+def adminServicesMembership():
+    # Displaying admin name
+    db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+    user = db.fetchall()
+    name = pickle.loads(user[0]['user_object']).name
+    flash(name)
+    # Flash services
+    db.execute('SELECT * FROM services')
+    services = db.fetchall()
+    serviceList = []
+    for service in services:
+        serviceList.append([service['name'], service['price']])
+    flash(serviceList)
+
+    # Flashing discounts
     unserialized_user = pickle.loads(user[0]['user_object'])
 
     membership_type = unserialized_user.membership
@@ -687,23 +962,13 @@ def membership():
     # For premium members
     premium_discount = spa_system.membership_benefits["Premium"]["discount"]
     premiumMinimumSpending = spa_system.membership_benefits["Premium"]["spending_limit"]
-    flash(username)
-    flash(membership_type)
     flash(new_discount)
     flash(newMinimumSpending)
     flash(regular_discount)
     flash(regularMinimumSpending)
     flash(premium_discount)
     flash(premiumMinimumSpending)
-    return render_template('user_membership.html')
-
-# Route for staff dashboard
-@app.route('/staffDashboard')
-def staffDashboard():   
-    db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
-    user = db.fetchall()
-    flash(pickle.loads(user[0]['user_object']).name)
-    return render_template('staff_dashboard.html')
+    return render_template("admin_dashboard.html")
 
 # Route for searching pet by Customer username
 @app.route('/petSearch', methods=['GET','POST'])
@@ -736,8 +1001,6 @@ def petSearch():
         flash(service_history_list)
         return render_template('staff_dashboard.html')
     
-
-
 # Route for logging out
 @app.route('/logout')
 def logout():
@@ -752,9 +1015,9 @@ def reroute():
         user = db.fetchall()
         user_type = user[0]['type']
         if user_type == "Owner":
-            pass
+            return redirect('/ownerDashboard')
         elif user_type == "Admin":
-            pass
+            return redirect('/adminDashboard')
         elif user_type == "Staff":
             return redirect('/staffDashboard')
         elif user_type == "Customer":
@@ -808,6 +1071,35 @@ def deleteAppointment():
             db.execute('DELETE FROM appointments WHERE id=?', (appointmentId,))
             con.commit()
         return redirect('/staffDashboard')
- 
+    
+# Route for deleting service
+@app.route('/deleteService',methods=['GET', 'POST'])
+def deleteService():
+    if request.method=='POST':
+        serviceToDelete = request.form.get("serviceToDelete")
+        db.execute('DELETE FROM services WHERE name=?', (serviceToDelete,))
+        con.commit()
+        return redirect('/ownerDashboard')
+
+# Route for changing service prices
+@app.route('/changeServicePrice', methods=['GET','POST'])
+def changeServicePrice():
+    if request.method == "POST":
+        serviceToChange = request.form.get('serviceToChange')
+        newServicePrice = int(request.form.get('newServicePrice'))
+        db.execute('UPDATE services SET price=? WHERE name=?', (newServicePrice, serviceToChange))
+        con.commit()
+        return redirect('/ownerDashboard')
+
+# Add new service
+@app.route('/addNewService', methods=['GET', 'POST'])
+def addNewService():
+    if request.method == "POST":
+        addedServiceName = request.form.get('addedServiceName')
+        addedServicePrice = int(request.form.get('addedServicePrice'))
+        db.execute('INSERT INTO services (name, price) VALUES (?, ?)', (addedServiceName, addedServicePrice))
+        con.commit()
+        return redirect('/ownerDashboard')
+
 if __name__ == '__main__':
     app.run(debug=True)

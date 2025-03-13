@@ -1,77 +1,84 @@
 {% extends 'layout.html' %}
-
-{% block title %} Appointments {% endblock%}
+{% block title %}Appointments{% endblock%}
 {% block nav %}
 
-<a class="navbar-brand" href="{{ url_for('userMainPage') }}">My Little Ponies Pet Spa</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link active" href="{{ url_for('appointment') }}">Appointment</a></li>
-            <li class="nav-item"><a class="nav-link " href="{{ url_for('services') }}">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('membership') }}">Membership</a></li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {% with message = get_flashed_messages() %}
-                        {{ message[0] }}
-                    {% endwith %}
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="#">View Profile</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">Log Out</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-
-{% endblock%}
+<a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('appointment') }}">Appointment</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('userMembership') }}">Membership</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% with messages = get_flashed_messages() %}
+                    {{ messages[0] }}
+                {% endwith %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="{{ url_for('customerEditProfile') }}">View Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+          </li>
+    </ul>
+</div>
+{% endblock %}
 
 {% block main %}
-
     <!-- Header -->
-    <header class="appointmentHeader position-relative bg-image">
-        <h1 class="text-center position-absolute bottom-0 start-50 translate-middle">Appointment History</h1>
+    <header class="header bg-image d-flex align-items-center justify-content-center">
+        <h1 class="text-center">My Appointments</h1>
     </header>
 
-    <div class="container my-4">
-        <!-- Upcoming Appointments -->
-        <section class="appointments">
-            <h2>Upcoming Appointments</h2>
-            <table class="table table-striped table-bordered">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Pet&#39;s Name</th>
-                        <th>Pet&#39;s Type</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>Bella</td><td>Dog</td><td>March 15, 2025</td></tr>
-                    <tr><td>Whiskers</td><td>Cat</td><td>March 20, 2025</td></tr>
-                </tbody>
-            </table>
-        </section>
+    <!-- Upcoming Appointments -->
+    <div class="container my-5">
+        <div class="table-container">
+            <h4 class="mb-3 fw-bold">Upcoming Appointments</h4>
+            <div class="table-header d-flex">
+                <div class="col-3">Date</div>
+                <div class="col-3">Pet&apos;s Name</div>
+                <div class="col-3">Pet&apos;s Type</div>
+                <div class="col-3">Services</div>
+            </div>
+            <div id="appointment-list">
+                {% with messages = get_flashed_messages() %}
+                    {% for data in messages[1] %}
+                        <div class="table-row d-flex">
+                            <div class="col-3">{{ data[0] }}</div>
+                            <div class="col-3">{{ data[1] }}</div>
+                            <div class="col-3">{{ data[2] }}</div>
+                            <div class="col-3">{{ data[3] }}</div>
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+            </div>
+        </div>
 
         <!-- Past Appointments -->
-        <section class="appointments">
-            <h2>Past Appointments</h2>
-            <table class="table table-striped table-bordered">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Pet&#39;s Name</th>
-                        <th>Pet&#39;s Type</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>Max</td><td>Dog</td><td>Feb 10, 2025</td></tr>
-                    <tr><td>Mittens</td><td>Cat</td><td>Jan 25, 2025</td></tr>
-                </tbody>
-            </table>
-        </section>
-    </div>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+        <div class="container my-5">
+            <div class="table-container">
+                <h4 class="mb-3 fw-bold">Appointment History</h4>
+                <div class="table-header d-flex">
+                    <div class="col-3">Date</div>
+                    <div class="col-3">Pet&apos;s Name</div>
+                    <div class="col-3">Pet&apos;s Type</div>
+                    <div class="col-3">Services</div>
+                </div>
+                <div id="appointment-list">
+                    {% with messages = get_flashed_messages() %}
+                        {% for data in messages[2] %}
+                            <div class="table-row d-flex">
+                                <div class="col-3">{{ data[0] }}</div>
+                                <div class="col-3">{{ data[1] }}</div>
+                                <div class="col-3">{{ data[2] }}</div>
+                                <div class="col-3">{{ data[3] }}</div>
+                            </div>
+                        {% endfor %}
+                {% endwith %}
+                </div>
+            </div>
+        </div>
 {% endblock %}

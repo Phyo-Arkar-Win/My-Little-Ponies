@@ -3,7 +3,7 @@
 {% block title %} Membership {% endblock%}
 {% block nav %}
 
-<a class="navbar-brand" href="{{ url_for('userMainPage') }}">My Little Ponies Pet Spa</a>
+<a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
     <span class="navbar-toggler-icon"></span>
 </button>
@@ -11,7 +11,7 @@
     <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
-        <li class="nav-item"><a class="nav-link active" href="{{ url_for('membership') }}">Membership</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('userMembership') }}">Membership</a></li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {% with messages = get_flashed_messages() %}
@@ -47,7 +47,11 @@
                     <!-- Spend Section -->
                     <div class="d-flex align-items-center gap-2">
                         <span class="text-dark fw-bolder">Spend :</span>
-                        <div class="text-dark rounded-2 bg-light px-3 py-1">1000 / 5000</div>
+                        <div class="text-dark rounded-2 bg-light px-3 py-1">
+                            {% with messages = get_flashed_messages() %}
+                                {{ messages[2] }}
+                            {% endwith %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -64,12 +68,12 @@
                     <h4 class="text-center">New</h4>
                     <p><span class="text-success">✔</span>
                         {% with messages = get_flashed_messages() %}
-                            {{ messages[2] }} Discount
+                            {{ messages[3] }} Discount
                         {% endwith %}
                     </p>
                     <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
                         {% with messages = get_flashed_messages() %}
-                            &#3647;{{ messages[3] }}
+                            &#3647;{{ messages[4] }}
                         {% endwith %}
                     </p>
                 </div>
@@ -79,13 +83,13 @@
                     <h4 class="text-center">Regular</h4>
                     <p><span class="text-success">✔</span>
                     {% with messages = get_flashed_messages() %}
-                        {{ messages[4] }} Discount
+                        {{ messages[5] }} Discount
                     {% endwith %}
                     </p>
                     <!-- <p>Congrats, you have booked more than one appointment. You will get more discount.</p> -->
                     <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
                         {% with messages = get_flashed_messages() %}
-                            &#3647;{{ messages[5] }}
+                            &#3647;{{ messages[6] }}
                         {% endwith %}
                     </p>
                 </div>
@@ -95,13 +99,13 @@
                     <h4 class="text-center">Premium</h4>
                     <p><span class="text-success">✔</span>
                         {% with messages = get_flashed_messages() %}
-                            {{ messages[6] }} Discount
+                            {{ messages[7] }} Discount
                         {% endwith %}
                     </p>
                     <!-- <p>Congrats, your membership has been upgraded to the max. At this point, you will get more discounts.</p> -->
                     <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
                         {% with messages = get_flashed_messages() %}
-                            &#3647;{{ messages[7] }}
+                            &#3647;{{ messages[8] }}
                         {% endwith %}
                     </p>
                 </div>

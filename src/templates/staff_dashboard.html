@@ -2,7 +2,7 @@
 {% block title %}Staff Dashboard{% endblock%}
 {% block nav %}
 
-    <a class="navbar-brand" href="customer_main.html">My Little Ponies Pet Spa</a>
+    <a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -52,6 +52,7 @@
                     <div class="col-2">Type</div>
                 </div>
                 <div id="pet-list">
+    
                     {% with messages = get_flashed_messages() %}
                         {% for message in messages[1] %}
                             <div class="table-row d-flex">

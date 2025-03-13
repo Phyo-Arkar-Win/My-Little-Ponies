@@ -228,6 +228,7 @@ th {
 
 .form-control {
     text-align: start;
+    padding: 12px;
 }
 
 /* --------- Customer Confirmation Page --------- */
@@ -331,4 +332,87 @@ input[type="checkbox"]:checked::after {
 
 .border {
     border-radius: 10px;
+}
+
+
+
+
+
+
+/*Edit Profile Selectors*/
+.edit-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    width: 69%;
+    padding: 20px;
+    margin: 20px auto; 
+    box-shadow: 0 0 10px rgba(199, 160, 160, 0.1);
+}
+
+/* .edit-input {
+    display: block;
+    background: #F2E2E2;
+    border: 1px solid #D9BFBF;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px
+} */
+
+.save-btn {
+    background: #4A382A;
+    color: white;
+    padding: 8px 24px; /* Small padding for a compact button */
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    width: auto; /* Keeps it from stretching */
+    display: block;
+    margin: 10px auto; /* Centers horizontally */
+    text-align: center;
+}
+
+/* Admin Page */
+
+/* .navbar .nav-link {
+    color: white !important;
+    font-weight: bold;
+} */
+
+.active-tab {
+    background-color: #d48c3a !important;
+    border-radius: 5px;
+}
+
+.dashboard-header {
+    background-color: #f7e0a5;
+    padding: 20px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+.admin-dashboard-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.search-icon {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.table-warning th{
+    background-color: #f8d98d !important;
 }

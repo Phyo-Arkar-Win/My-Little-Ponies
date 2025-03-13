@@ -2,7 +2,7 @@
 
 {% block title %} My Little Ponies Pet Spa {% endblock%}
 {% block nav %}
-    <a class="navbar-brand" href="{{ url_for('userMainPage') }}">My Little Ponies Pet Spa</a>
+    <a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -10,15 +10,15 @@
         <ul class="navbar-nav ms-auto">
             <li class="nav-item"><a class="nav-link" href="{{ url_for('appointment') }}">Appointment</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('services') }}">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('membership') }}">Membership</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('userMembership') }}">Membership</a></li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {% with message = get_flashed_messages() %}
                         {{ message[0] }}
-                    {% endwith %}
+                    {% endwith %}   
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                  <li><a class="dropdown-item" href="#">View Profile</a></li>
+                  <li><a class="dropdown-item" href="{{ url_for('customerEditProfile') }}">View Profile</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
                 </ul>
@@ -48,7 +48,7 @@
             <a href="{{ url_for('services') }}" class="text-decoration-none text-white">
                 <button class="btn service-btn">Services</button>
             </a>
-            <a href="{{ url_for('membership') }}" class="text-decoration-none text-white">
+            <a href="{{ url_for('userMembership') }}" class="text-decoration-none text-white">
                 <button class="btn service-btn">Membership</button>
             </a>
         </div>

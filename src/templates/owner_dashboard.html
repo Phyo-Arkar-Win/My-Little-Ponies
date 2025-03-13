@@ -1,0 +1,130 @@
+{% extends 'layout.html' %}
+{% block title %}Owner Dashboard{% endblock%}
+{% block nav %}
+<a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% with message = get_flashed_messages() %}
+                    {{ message[0] }}
+                {% endwith %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown"> 
+              <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+          </li>
+    </ul>
+</div>  
+{% endblock %}
+
+{% block main %}
+
+        <!-- Past Appointments -->
+        <div class="container my-5 p-0">
+            <div class="table-container">
+                <h4 class="mb-3 fw-bold">Admins & Staffs | Meet the team</h4>
+                <div class="table-header d-flex">
+                    <div class="col-2">Number</div>
+                    <div class="col-2">Name</div>
+                    <div class="col-2">Username</div>
+                    <div class="col-2">Role</div>
+                    <div class="col-4 text-center">Remove</div>
+                </div>
+                <div id="staff-list">
+                    {% with staffs = get_flashed_messages() %}
+                        {% for staff in staffs[1] %}
+                            <div class="table-row d-flex">
+                                <div class="col-2">{{ loop.index }}</div>
+                                <div class="col-2">{{ staff[0] }}</div>
+                                <div class="col-2">{{ staff[1] }}</div>
+                                <div class="col-2">{{ staff[2] }}</div>
+                                <div class="col-4 text-center">
+                                    <button class="p-0 border-0" style="background-color: transparent;">
+                                        <i class="bi bi-trash3-fill h5 text-danger"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+            </div>
+        
+        <div class="container">
+    
+            <h2 class="mt-5 mb-4 fw-bold">Manage Services</h2>
+            <div class="service-card">
+            <div class="row mb-2 fw-bold">
+                <div class="col-8 fs-3 text-decoration-underline">Service</div>
+                <div class="col-4 text-end fs-3 text-decoration-underline">Price</div>
+            </div>
+            {% with messages = get_flashed_messages() %}
+                {% for service in messages[2] %}
+                    <div class="row mb-2">
+                        
+                        <div class="col-8">
+                        <div class="form-check">
+                            <label class="form-check-label" for="eyeCleaning">{{ service[0] }}</label>
+                        </div>
+                        </div>
+                        <div class="col-4 text-end">{{ service[1] }}</div>
+                    </div>
+                {% endfor %}
+            {% endwith %}
+        </div>
+        
+        <!-- Delete -->
+        <form method="POST" action="{{ url_for('deleteService') }}">
+            <div class="row container mt-5 gap-5 d-flex flex-wrap justify-content-between">
+                <select class="form-select col form-control" name="serviceToDelete" style="background-color: #fff;">
+                    <option selected disabled>Services</option>
+                            {% with messages = get_flashed_messages() %}
+                                {% for service in messages[3] %}
+                                    <option>{{ service }}</option>
+                                {% endfor %}
+                            {% endwith %}
+                </select>
+                <button class="btn col-2 btn-danger" type="submit">Delete</button>
+            </div>
+        </form>
+        
+        <!-- Change --> 
+         <form method="POST" action="{{ url_for('changeServicePrice') }}">
+             <div class="row container mt-4 gap-5 d-flex flex-wrap justify-content-between">
+                 <select class="form-select col" name="serviceToChange" style="background-color: #fff;">
+                   <option selected disabled>Services</option>
+                        {% with messages = get_flashed_messages() %}
+                            {% for service in messages[3] %}
+                                <option>{{ service }}</option>
+                            {% endfor %}
+                        {% endwith %}
+                 </select>
+                 <input type="text" name="newServicePrice" class="form-control text-start col" style="background-color: #fff;" placeholder="Enter new price"> 
+                 <button class="btn col-2 btn-warning">Change</button>
+             </div>
+         </form>
+        <!-- Add -->
+         <form method="POST" action="{{ url_for('addNewService') }}">
+             <div class="row container my-4 gap-5 d-flex flex-wrap justify-content-between">
+                 <input type="text" class="form-control w-auto text-start col" name="addedServiceName" style="background-color: #fff; padding-right:32px" placeholder="Enter service name">
+                 <input type="text" class="form-control w-auto text-start col" name="addedServicePrice" style="background-color: #fff;" placeholder="Enter price">
+                 <button class="btn col-2 btn-success">Add</button>
+             </div>
+         </form>
+
+             <!-- --------- Generate Report --------- -->
+        <div class="container mt-5">
+            <h2 class="fw-bold">Reports</h2>
+            <div class="p-4 border border-2 mt-2 d-flex flex-column align-items-center justify-content-between" style="background-color: #fff;">
+                <h4>Generate Appointment Report</h4>
+                <form method="POST" action="{{ url_for('ownerGenerateReport') }}">
+                    <button class="btn btn-warning text-light mt-2 px-5"type="submit">Generate</button>
+                </form>
+            </div>
+        </div>
+
+{% endblock %}

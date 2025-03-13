@@ -1,0 +1,107 @@
+{% extends 'layout.html' %}
+{% block title %}Admin Dashboard{% endblock%}
+{% block nav %}
+<a class="navbar-brand" href="{{ url_for('adminDashboard') }}">My Little Ponies Pet Spa</a>
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#">Management</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#">Service and Membership</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% with message = get_flashed_messages() %}
+                    {{ message[0] }}
+                {% endwith %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="#">View Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ url_for('logout')}}">Log Out</a></li>
+            </ul>
+          </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block main %}
+    <header class="container-fluid services_page_hero px-5">
+        <div class="row justify-content-around align-items-center px-5">
+        </div>
+    </header>
+    <div class="container">
+        
+            <h2 class="text-center fw-bold py-3 mb-4 rounded-4" style="background-color: #FAE0A3;">SERVICES</h2>
+
+        <div class="service-card">
+        <div class="row mb-2 fw-bold">
+            <div class="col-8 fs-3 text-decoration-underline">Service</div>
+            <div class="col-4 text-end fs-3 text-decoration-underline">Price</div>
+        </div>
+        {% with messages = get_flashed_messages() %}
+            {% for service in messages[1] %}
+                <div class="row mb-2">
+                    <div class="col-8">
+                    <div class="form-check">
+                        <label class="form-check-label" for="eyeCleaning">{{ service[0] }}</label>
+                    </div>
+                    </div>
+                    <div class="col-4 text-end">{{ service[1] }}</div>
+                </div>
+            {% endfor %}
+        {% endwith %}
+        </div>
+        <div class="container my-5">
+            <h2 class="text-center fw-bold" style="text-decoration: underline">Types of Membership</h2>
+            <div class="row mt-4 position-relative">
+                <div class="col-md-4 d-flex">
+                    <div class="p-3 text-start rounded d-flex flex-column w-100" style="background-color: #fff;">
+                        <h4 class="text-center">New</h4>
+                        <p><span class="text-success">✔</span>
+                            {% with messages = get_flashed_messages() %}
+                                {{ messages[2] }} Discount
+                            {% endwith %}
+                        </p>
+                        <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
+                            {% with messages = get_flashed_messages() %}
+                                &#3647;{{ messages[3] }}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex">
+                    <div class="p-3 text-start rounded d-flex flex-column w-100" style="background-color: #c0c0c0;">
+                        <h4 class="text-center">Regular</h4>
+                        <p><span class="text-success">✔</span>
+                        {% with messages = get_flashed_messages() %}
+                            {{ messages[4] }} Discount
+                        {% endwith %}
+                        </p>
+                        <!-- <p>Congrats, you have booked more than one appointment. You will get more discount.</p> -->
+                        <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
+                            {% with messages = get_flashed_messages() %}
+                                &#3647;{{ messages[5] }}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex">
+                    <div class="p-3 text-start rounded d-flex flex-column w-100" style="background-color: #f5b742;">
+                        <h4 class="text-center">Premium</h4>
+                        <p><span class="text-success">✔</span>
+                            {% with messages = get_flashed_messages() %}
+                                {{ messages[6] }} Discount
+                            {% endwith %}
+                        </p>
+                        <!-- <p>Congrats, your membership has been upgraded to the max. At this point, you will get more discounts.</p> -->
+                        <p class="mt-auto text-decoration-underline text-center">Minimum Spending: 
+                            {% with messages = get_flashed_messages() %}
+                                &#3647;{{ messages[7] }}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
