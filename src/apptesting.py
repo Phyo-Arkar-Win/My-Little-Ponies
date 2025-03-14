@@ -50,9 +50,9 @@ class Customer(User):
         self.__spending = 0
         self.__membership = "New"
 
-    @property
-    def pet_list(self):
-        return self.__pet_list
+    # @property
+    # def pet_list(self):
+    #     return self.__pet_list
     
     @property
     def membership(self):
@@ -223,11 +223,11 @@ class Admin(User):
     def search_appointments_by_staff_name(self, staff_name, system):
         return [app for app in system.appointment_list if app.staff_username == staff_name]
 
-    def search_pet_by_customer_name(self, customer_name, system):
-        for customer in system.customer_list:
-            if customer.username == customer_name:
-                return customer.pet_list
-        return "Customer not found."
+    # def search_pet_by_customer_name(self, customer_name, system):
+    #     for customer in system.customer_list:
+    #         if customer.username == customer_name:
+    #             return customer.pet_list
+    #     return "Customer not found."
 
     def add_staff(self, system, staff=Staff):
         system.staff_list.append(staff)
@@ -867,6 +867,9 @@ def staffDashboard():
 
 @app.route('/adminDashboard')
 def adminDashboard():
+    db.execute('SELECT * FROM testing WHERE id=?', [session['user_id']])
+    user = db.fetchall()
+    flash(pickle.loads(user[0]['user_object']).name)
     return render_template('admin_dashboard.html')
 
 # Route for recruiting new staff
@@ -889,10 +892,11 @@ def recruitStaff():
                 return render_template('admin_dashboard.html')
         flash("Success")
 
+        staff1 = Staff(username, username, generate_password_hash(password, method='pbkdf2:sha256', salt_length=8))
         db.execute('''
             INSERT INTO testing (type, username, user_object)
             VALUES (?,?,?)
-        ''', ("Staff", username, password))
+        ''', ("Staff", username, pickle.dumps(staff1)))
         con.commit()
         return render_template("admin_dashboard.html")
         
@@ -907,12 +911,18 @@ def findStaff():
         flash(name)
 
         staffUsernameToSearch = request.form.get("staffNameToSearch")
+        db.execute('SELECT * FROM testing WHERE username=?',(staffUsernameToSearch,))
+        staff = db.fetchall()
+        flash("Staff Name")
+        flash((pickle.loads(staff[0]['user_object'])).name)
+
+        # Flash staff's appointments
         db.execute("SELECT * FROM appointments")
-        appointments = db.fetchall
+        appointments = db.fetchall()
         appointment_list = []
         for appointment in appointments:
             appointment_obj = pickle.loads(appointment['appointment_object'])
-            if appointment_obj['staff_username'] == staffUsernameToSearch:
+            if appointment_obj.staff_username == staffUsernameToSearch:
                 appointment_list.append([appointment_obj.date, appointment_obj.pet_name, appointment_obj.pet_type, appointment_obj.service_name])
         flash(appointment_list)
         return render_template("admin_dashboard.html")
@@ -1061,6 +1071,26 @@ def temp():
             ''', ("Staff", tony.username, tony_obj))
     con.commit()
     return redirect('/')
+
+@app.route('/addAdmin')
+def addAdmin():
+    admin = Admin("admin", "admin", generate_password_hash("admin", method='pbkdf2:sha256', salt_length=8))
+    db.execute('''
+                INSERT INTO testing (type, username, user_object)
+                VALUES (?,?,?)
+            ''', ("Admin", admin.username, pickle.dumps(admin)))
+    con.commit()
+    return redirect('/reroute')
+
+@app.route('/addOwner')
+def addOwner():
+    owner1 = Owner("owner", "owner", generate_password_hash("owner", method='pbkdf2:sha256', salt_length=8))
+    db.execute('''
+                INSERT INTO testing (type, username, user_object)
+                VALUES (?,?,?)
+            ''', ("Owner", owner1.username, pickle.dumps(owner1)))
+    con.commit()
+    return redirect('/reroute')
 
 # Route for deleting appointment
 @app.route('/deleteAppointment', methods = ['GET', 'POST'])

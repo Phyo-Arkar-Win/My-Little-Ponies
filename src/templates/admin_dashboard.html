@@ -37,7 +37,7 @@
                     <input type="password" class="form-control" name="newUserPassword" placeholder="Enter password">
                     <button type="submit" class="btn btn-success rounded-3"  style="padding: 12px 24px;">Hire</button>
                 </div>
-            </form>
+            </form> 
             {% with messages = get_flashed_messages() %}
                 {% if messages[1] == "Failed" %}
                     <div class="alert alert-warning text-center align-items-center gap-2 mt-3" role="alert">
@@ -50,20 +50,25 @@
         <div class="container admin-dashboard-card">
             <h5 class="fw-bold my-2">Check Staff</h5>
     
-            <div class="input-group">
-                <input type="text" name="staffNameToSearch" class="form-control" placeholder="Enter staff username">
-                <form method="POST" action="{{ url_for('findStaff') }}">
-                    <button type="submit" class="input-group-text search-icon px-4">
-                        <i class="bi bi-seach"></i>
-                    </button>
-                </form>
-                <span class="input-group-text search-icon"><i class="bi bi-search"></i></span>
+            <form method="POST" action="{{ url_for('findStaff') }}">
+                <div class="input-group">
+                    <input type="text" name="staffNameToSearch" class="form-control" placeholder="Enter staff username">
+                        <button type="submit" class="input-group-text search-icon px-4">
+                            <i class="bi bi-search"></i>
+                        </button>
+            </form>
             </div>
             <div class="my-2 d-flex align-items-center justify-content-between">
                 {% with messages = get_flashed_messages() %}
-                        <p class="mb-0"><strong>Staff Name </strong> : {{messages[0]}}</p>
+                    {% if messages[1] == "Staff Name" %}
+                        <p class="mb-0"><strong>Staff Name </strong> : {{messages[2]}}</p>
+                    {% endif %}
                 {% endwith %}
                 <form method="POST" action="{{ url_for('deleteStaff') }}">
+                    {% with messages = get_flashed_messages() %}
+                       
+                        <input type="hidden" name="staffNameToDelete" value="{{ messages[]}}"
+                    {% endwith %}               
                     <button type="submit" class="btn rounded-3 btn-danger" style="padding: 12px 24px;">Fire</button>
                 </form>
             </div>
@@ -79,7 +84,7 @@
                 </thead>
                 <tbody>
                     {% with messages = get_flashed_messages() %}
-                        {% for data in messages[1] %}
+                        {% for data in messages[3] %}
                         <tr>
                             <td>{{ data[0] }}</td>
                             <td>{{ data[1] }}</td>
