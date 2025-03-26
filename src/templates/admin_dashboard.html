@@ -56,20 +56,21 @@
                         <button type="submit" class="input-group-text search-icon px-4">
                             <i class="bi bi-search"></i>
                         </button>
-            </form>
-            </div>
+                    </div>
+                </form>
             <div class="my-2 d-flex align-items-center justify-content-between">
                 {% with messages = get_flashed_messages() %}
-                    {% if messages[1] == "Staff Name" %}
-                        <p class="mb-0"><strong>Staff Name </strong> : {{messages[2]}}</p>
+                    {% if messages[2] == "Staff Name" %}
+                        <p class="mb-0"><strong>Staff Name </strong> : {{messages[3]}}</p>
                     {% endif %}
                 {% endwith %}
                 <form method="POST" action="{{ url_for('deleteStaff') }}">
                     {% with messages = get_flashed_messages() %}
-                       
-                        <input type="hidden" name="staffNameToDelete" value="{{ messages[]}}"
+                        {% if messages[3] %}
+                            <input type="hidden" name="staffNameToDelete" value="{{ messages[3]}}">
+                            <button type="submit" class="btn rounded-3 btn-danger" style="padding: 12px 24px;">Fire</button>
+                        {% endif %}
                     {% endwith %}               
-                    <button type="submit" class="btn rounded-3 btn-danger" style="padding: 12px 24px;">Fire</button>
                 </form>
             </div>
            
@@ -84,7 +85,7 @@
                 </thead>
                 <tbody>
                     {% with messages = get_flashed_messages() %}
-                        {% for data in messages[3] %}
+                        {% for data in messages[4] %}
                         <tr>
                             <td>{{ data[0] }}</td>
                             <td>{{ data[1] }}</td>
