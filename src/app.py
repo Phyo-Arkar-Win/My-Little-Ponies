@@ -7,7 +7,6 @@ import random
 from datetime import datetime
 
 # OOP code
-
 class User:
     def __init__(self, username, name, password):
         self.__username = username
@@ -220,12 +219,6 @@ class PetSpaSystem:
     def signup(self, username, name, password):
         customer = Customer(username, name, password)
         return customer
-
-    # def login(self, username, password):
-    #     for user in self.customer_list + self.staff_list + self.admin_list + self.owner_list:
-    #         if user.username == username and user.password == password:
-    #             return f"Welcome, {user.display_name}!"
-    #     return "Invalid credentials."
     
     @property
     def membership_benefits(self):
@@ -347,8 +340,8 @@ def loginPage():
             return redirect('/reroute')
             
 # route for user main page
-@app.route('/userMain')
-def userMain():
+@app.route('/customerMain')
+def customerMain():
     if 'user_id' in session:
         db.execute('SELECT * FROM users WHERE id=?', [session['user_id']])
         user = db.fetchall()
@@ -357,7 +350,7 @@ def userMain():
             name = pickle.loads(user[0]['user_object']).name
             # Flash name on nav bar 
             flash(name)
-            return render_template('user_main.html')
+            return render_template('customer_main.html')
         # Redirect if not customer
         else:
             return redirect('reroute')
@@ -629,11 +622,11 @@ def userMembership():
     flash(regularMinimumSpending)
     flash(premium_discount)
     flash(premiumMinimumSpending)
-    return render_template('user_membership.html')
+    return render_template('customer_membership.html')
 
 # Route for customer edit profile
-@app.route('/customerEditProfile')
-def customerEditProfile():
+@app.route('/userEditProfile')
+def userEditProfile():
 
     # Flashing name in nav bar
     db.execute('SELECT * FROM users WHERE id=?', [session['user_id']])
@@ -641,7 +634,7 @@ def customerEditProfile():
     user_obj = pickle.loads(user[0]['user_object'])
     flash(user_obj.name)
 
-    return render_template('customer_edit_profile.html')
+    return render_template('user_edit_profile.html')
 
 # Route to change name
 @app.route('/changeName', methods=['GET','POST'])
@@ -665,7 +658,7 @@ def changeName():
         flash(user_obj.name) 
         
         flash("Name Change Success")
-        return render_template('customer_edit_profile.html')
+        return render_template('user_edit_profile.html')
 
 # Route for editing password
 @app.route('/changePassword', methods=['GET','POST'])
@@ -696,7 +689,7 @@ def changePassword():
             con.commit()
             flash("Success")
         
-        return render_template('customer_edit_profile.html')
+        return render_template('user_edit_profile.html')
 
 @app.route('/ownerDashboard')
 def ownerDashboard():   
@@ -949,7 +942,7 @@ def reroute():
         elif user_type == "Staff":
             return redirect('/staffDashboard')
         elif user_type == "Customer":
-            return redirect('/userMain')
+            return redirect('/customerMain')
     else:
         return redirect('/login')
 

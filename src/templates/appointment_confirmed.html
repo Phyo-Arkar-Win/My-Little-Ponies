@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block title %}Appointment Confirmed{% endblock%}
 {% block nav %}
-<a class="navbar-brand" href="{{ url_for('userMain') }}">My Little Ponies Pet Spa</a>
+<a class="navbar-brand" href="{{ url_for('customerMain') }}">My Little Ponies Pet Spa</a>
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
     <span class="navbar-toggler-icon"></span>
 </button>
@@ -17,7 +17,7 @@
                 {% endwith %}
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-              <li><a class="dropdown-item" href="{{ url_for('customerEditProfile') }}">View Profile</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('userEditProfile') }}">View Profile</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a></li>
             </ul>
@@ -74,7 +74,7 @@
             <a href="{{ url_for('appointment') }}">
                 <button class="btn btn-outline-secondary py-2" style="padding: 0 64px;">View Appointment History</button>
             </a>
-            <a href="{{ url_for('userMain') }}">
+            <a href="{{ url_for('customerMain') }}">
                 <button class="btn py-2 text-light confirm-btn" style="padding: 0 64px;">Back to Home Page</button>
             </a>
         </div>
